@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin or Voter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #video-container {
+            margin: 20px auto;
+            width: 80%;
+        }
+        #feedback-form {
+            margin-top: 30px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .feedback-section {
+            margin-top: 20px;
+        }
+        .feedback-item {
+            background-color: #e1f7d5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page: Admin or Voter Selection -->
+    <div id="role-selection">
+        <h1>Welcome to the Feedback Site</h1>
+        <p>Are you the Admin or a Voter?</p>
+        <button onclick="setRole('admin')">Admin</button>
+        <button onclick="setRole('voter')">Voter</button>
+    </div>
+
+    <!-- Admin Password Prompt -->
+    <div id="password-prompt" style="display: none;">
+        <h2>Please enter the Admin password:</h2>
+        <input type="password" id="admin-password" placeholder="Enter Password">
+        <button onclick="checkAdminPassword()">Submit</button>
+        <p id="password-error" style="color: red; display: none;">Incorrect password, please try again.</p>
+    </div>
+
+    <!-- Admin Page -->
+    <div id="admin-page" style="display: none;">
+        <h1>Admin Panel</h1>
+        <p>Welcome Admin! Below is the video where you can explain things.</p>
+
+        <!-- Video Display (YouTube embed example) -->
+        <div id="video-container">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/dlz3wBojcLE" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <!-- Feedback from Voters -->
+        <h3>Voter Feedback:</h3>
+        <div id="feedback-container" class="feedback-section"></div>
+    </div>
+
+    <!-- Voter Page -->
+    <div id="voter-page" style="display: none;">
+        <h1>Voter Panel</h1>
+        <p>Watch the video below and provide feedback on what you'd like changed.</p>
+
+        <!-- Video Display (YouTube embed example) -->
+        <div id="video-container">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/dlz3wBojcLE" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <!-- Feedback Form -->
+        <div id="feedback-form">
+            <h3>Provide your feedback:</h3>
+            <textarea id="feedback" placeholder="What would you like to change?"></textarea>
+            <br>
+            <button onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <script>
+        // Admin Password
+        const adminPassword = "admin"; // Change this to your desired password
+
+        // Function to handle role selection (Admin or Voter)
+        function setRole(role) {
+            if (role === 'admin') {
+                document.getElementById('role-selection').style.display = 'none';
+                document.getElementById('password-prompt').style.display = 'block'; // Show password prompt
+            } else {
+                document.getElementById('role-selection').style.display = 'none';
+                document.getElementById('voter-page').style.display = 'block';
+            }
+        }
+
+        // Function to check the Admin password
+        function checkAdminPassword() {
+            const enteredPassword = document.getElementById('admin-password').value;
+            if (enteredPassword === adminPassword) {
+                document.getElementById('password-prompt').style.display = 'none'; // Hide password prompt
+                document.getElementById('admin-page').style.display = 'block'; // Show Admin page
+                loadFeedback(); // Load feedback for the Admin
+            } else {
+                document.getElementById('password-error').style.display = 'block'; // Show error message
+            }
+        }
+
+        // Function to submit feedback (for Voter)
+        function submitFeedback() {
+            const feedback = document.getElementById('feedback').value;
+            if (feedback) {
+                alert('Thank you for your feedback!');
+                saveFeedback(feedback); // Save the feedback
+                document.getElementById('feedback').value = ''; // Clear the textarea
+            } else {
+                alert('Please enter some feedback before submitting.');
+            }
+        }
+
+        // Placeholder function to save feedback (in this case, just stores it in the array)
+        const feedbackData = []; // To hold feedback temporarily
+
+        function saveFeedback(feedback) {
+            feedbackData.push(feedback); // Save to the array
+            loadFeedback(); // Reload feedback on the Admin page
+        }
+
+        // Function to load feedback for the Admin (displaying all feedbacks)
+        function loadFeedback() {
+            const feedbackContainer = document.getElementById('feedback-container');
+            feedbackContainer.innerHTML = ''; // Clear previous feedback
+            feedbackData.forEach(feedback => {
+                const feedbackItem = document.createElement('div');
+                feedbackItem.className = 'feedback-item';
+                feedbackItem.textContent = feedback;
+                feedbackContainer.appendChild(feedbackItem);
+            });
+        }
+    </script>
+</body>
+</html>
